@@ -26,13 +26,13 @@ public class ProductController {
     @PostMapping("/addNewProduct")
     public ResponseEntity<String> createProduct(@RequestBody @Valid ProductDTO productDTO) throws AlreadyExists, NegativeValueException {
         productService.create(productDTO);
-        return new ResponseEntity<>("message : Product is Saved Successfully", HttpStatus.CREATED);
+        return new ResponseEntity<>("Product saved successfully", HttpStatus.CREATED);
     }
 
     @PutMapping("/updateProductBy/{id}")
     public ResponseEntity<String> updateProduct(@RequestBody ProductDTO productDTO, @PathVariable long id) throws NotFoundException, NegativeValueException {
         productService.update(productDTO, id);
-        return new ResponseEntity<>("message : Product update successfully", HttpStatus.CREATED);
+        return new ResponseEntity<>("Product updated successfully", HttpStatus.CREATED);
     }
 
     @DeleteMapping("/deleteProductBy/{id}")
