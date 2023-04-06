@@ -1,5 +1,6 @@
 package com.ecommerce.appliaction.serviceimpl;
 
+import com.ecommerce.appliaction.dto.UserDTO;
 import com.ecommerce.appliaction.repositotry.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -24,4 +25,5 @@ public class CustomUserDetailsService implements UserDetailsService {
                 new ArrayList<>());
 
     }
+
 }

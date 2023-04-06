@@ -4,19 +4,22 @@ import com.ecommerce.appliaction.dto.CartDTO;
 import com.ecommerce.appliaction.entity.Cart;
 import com.ecommerce.appliaction.entity.Customer;
 import com.ecommerce.appliaction.entity.Product;
+import com.ecommerce.appliaction.exception.EmptyDataException;
 import com.ecommerce.appliaction.exception.NegativeValueException;
-import com.ecommerce.appliaction.exception.NotFoundException;
+import com.ecommerce.appliaction.exception.NoSuchElementFoundException;
 import com.ecommerce.appliaction.repositotry.CartRepository;
 import com.ecommerce.appliaction.repositotry.CustomerRepository;
 import com.ecommerce.appliaction.repositotry.ProductRepository;
 import com.ecommerce.appliaction.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CartServiceImpl implements CartService {
+public   class CartServiceImpl implements CartService {
     @Autowired
     CartRepository cartRepository;
     @Autowired
@@ -26,18 +29,19 @@ public class CartServiceImpl implements CartService {
 
 
     @Override
-    public void addItem(CartDTO cartDTO) throws NotFoundException {
+    public void addItem(CartDTO cartDTO) throws NoSuchElementFoundException {
         Cart cart = new Cart();
 
         Optional<Customer> customer = customerRepository.findById(cartDTO.getCustomerId());
         if (customer.isEmpty()) {
-            throw new NotFoundException("Customer not found for id: " + cartDTO.getCustomerId());
+            throw new NoSuchElementFoundException("Customer not found for id: " + cartDTO.getCustomerId());
         }
         cart.setCustomer(customer.get());
+        cart.setCustomerName(customer.get().getCustomerName());
 
         Optional<Product> product = productRepository.findById(cartDTO.getProductId());
         if (product.isEmpty()) {
-            throw new NotFoundException("Product not found for id: " + cartDTO.getProductId());
+            throw new NoSuchElementFoundException("Product not found for id: " + cartDTO.getProductId());
         }
         cart.setProductName(product.get().getProductName());
         cart.setPrice(product.get().getProductPrice());
@@ -49,20 +53,20 @@ public class CartServiceImpl implements CartService {
 
 
     @Override
-    public Cart updateItem(CartDTO cartDTO, Long id) throws NegativeValueException, NotFoundException {
+    public Cart updateItem(CartDTO cartDTO, Long id) throws NegativeValueException, NoSuchElementFoundException {
         var product = productRepository.findById(cartDTO.getProductId())
-                .orElseThrow(() -> new NotFoundException("Product not found for id: " + cartDTO.getProductId()));
+                .orElseThrow(() -> new NoSuchElementFoundException("Product not found for id: " + cartDTO.getProductId()));
 
         var customer = customerRepository.findById(cartDTO.getCustomerId())
-                .orElseThrow(() -> new NotFoundException("Customer not found for id: " + cartDTO.getCustomerId()));
+                .orElseThrow(() -> new NoSuchElementFoundException("Customer not found for id: " + cartDTO.getCustomerId()));
+
+        var cart = cartRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementFoundException("Cart item not found for id: " + id));
 
         if (cartDTO.getQuantity() <= 0) {
             throw new NegativeValueException("Invalid quantity entered: " + cartDTO.getQuantity());
         }
-
-        var cart = cartRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Cart item not found for id: " + id));
-
+        cart.setCustomerName(customer.getCustomerName());
         cart.setQuantity(cartDTO.getQuantity());
         cart.setProductName(product.getProductName());
         cart.setPrice(product.getProductPrice());
@@ -72,21 +76,28 @@ public class CartServiceImpl implements CartService {
         return cart;
     }
 
-    public String removeItem(Long id) throws NotFoundException {
+    public String removeItem(Long id) throws NoSuchElementFoundException {
         Cart cart = cartRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Cart not found for id = " + id));
+                .orElseThrow(() -> new NoSuchElementFoundException("Cart not found for id = " + id));
         cartRepository.delete(cart);
         return "Cart removed from table";
     }
 
 
     @Override
-    public Optional<Cart> getCartByID(Long id) throws NotFoundException {
-        Optional<Cart> cart = cartRepository.findById(id);
-        if (cart.isEmpty()) {
-            throw new NotFoundException("Cart item not found for id: " + id);
+    public Cart getCartByID(Long id) throws NoSuchElementFoundException {
+        return cartRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementFoundException("cart not found  id : " + id));
+
+    }
+
+    @Override
+    public List<Cart> getAll() throws EmptyDataException {
+        List<Cart> cartList = cartRepository.findAll();
+        if (cartList.isEmpty()) {
+            throw new EmptyDataException("no such element found,table is empty", HttpStatus.NOT_FOUND);
         }
-        return cart;
+        return cartList;
     }
 
 }

@@ -6,7 +6,7 @@ import com.ecommerce.appliaction.entity.Product;
 import com.ecommerce.appliaction.exception.AlreadyExists;
 import com.ecommerce.appliaction.exception.EmptyDataException;
 import com.ecommerce.appliaction.exception.NegativeValueException;
-import com.ecommerce.appliaction.exception.NotFoundException;
+import com.ecommerce.appliaction.exception.NoSuchElementFoundException;
 import com.ecommerce.appliaction.repositotry.CategoryRepository;
 import com.ecommerce.appliaction.repositotry.ProductRepository;
 import com.ecommerce.appliaction.service.ProductService;
@@ -41,18 +41,18 @@ public class ProductImpl implements ProductService {
         product.setProductDiscount(productDTO.getProductDiscount());
         product.setProductStock(productDTO.getProductStock());
         Category category = categoryRepository.findById(productDTO.getCategoryId())
-                .orElseThrow(() -> new NotFoundException("Category not found please change the categoryId: " + productDTO.getCategoryId()));
+                .orElseThrow(() -> new NoSuchElementFoundException("Category not found please change the categoryId: " + productDTO.getCategoryId()));
         product.setCategory(category);
         productRepository.save(product);
     }
 
     @Override
-    public Product update(ProductDTO productDTO, Long id) throws NotFoundException, NegativeValueException {
+    public Product update(ProductDTO productDTO, Long id) throws NoSuchElementFoundException, NegativeValueException {
         //validate ProductDTO
         validateProductDTO(productDTO);
 
         var existingProduct = productRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Product not found id = " + id));
+                .orElseThrow(() -> new NoSuchElementFoundException("Product not found id = " + id));
 
 
         existingProduct.setProductStock(productDTO.getProductStock());
@@ -60,7 +60,7 @@ public class ProductImpl implements ProductService {
         existingProduct.setProductName(productDTO.getProductName());
         existingProduct.setProductPrice(productDTO.getProductPrice());
         Category category = categoryRepository.findById(productDTO.getCategoryId())
-                .orElseThrow(() -> new NotFoundException("Category not found please change the categoryId: " + productDTO.getCategoryId()));
+                .orElseThrow(() -> new NoSuchElementFoundException("Category not found please change the categoryId: " + productDTO.getCategoryId()));
         existingProduct.setCategory(category);
 
 
@@ -69,17 +69,17 @@ public class ProductImpl implements ProductService {
 
 
     @Override
-    public void delete(Long id) throws NotFoundException {
+    public void delete(Long id) throws NoSuchElementFoundException {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Product not found for id = " + id));
+                .orElseThrow(() -> new NoSuchElementFoundException("Product not found for id = " + id));
         productRepository.delete(product);
     }
 
 
     @Override
-    public Product getById(Long id) throws NotFoundException {
+    public Product getById(Long id) throws NoSuchElementFoundException {
         return productRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("please enter valid product id = " + id));
+                .orElseThrow(() -> new NoSuchElementFoundException("please enter valid product id = " + id));
     }
 
 

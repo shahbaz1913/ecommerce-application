@@ -6,7 +6,7 @@ import com.ecommerce.appliaction.dto.CategoryDTO;
 import com.ecommerce.appliaction.entity.Category;
 import com.ecommerce.appliaction.exception.AlreadyExists;
 import com.ecommerce.appliaction.exception.EmptyDataException;
-import com.ecommerce.appliaction.exception.NotFoundException;
+import com.ecommerce.appliaction.exception.NoSuchElementFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,19 +30,19 @@ public class CategoryController {
     }
 
     @PutMapping("/updateCategoryBy/{id}")
-    public ResponseEntity<String> updateCategory(@RequestBody @Valid  CategoryDTO categoryDTO, @PathVariable long id) throws NotFoundException {
+    public ResponseEntity<String> updateCategory(@RequestBody @Valid  CategoryDTO categoryDTO, @PathVariable long id) throws NoSuchElementFoundException {
          categoryService.update(categoryDTO, id);
         return new ResponseEntity<>("category updated successfully", HttpStatus.CREATED);
     }
 
     @DeleteMapping("/deleteCategoryBy/{id}")
-    public ResponseEntity<String> deleteCategory(@PathVariable Long id) throws NotFoundException {
+    public ResponseEntity<String> deleteCategory(@PathVariable Long id) throws NoSuchElementFoundException {
         categoryService.delete(id);
         return new ResponseEntity<>("Message : category deleted successfully", HttpStatus.OK);
     }
 
     @GetMapping("/fetchCategoryBy/{id}")
-    public ResponseEntity<Category> getCategory(@PathVariable Long id) throws NotFoundException {
+    public ResponseEntity<Category> getCategory(@PathVariable Long id) throws NoSuchElementFoundException {
         Category Category = this.categoryService.getById(id);
         return new ResponseEntity<>(Category, HttpStatus.OK);
     }

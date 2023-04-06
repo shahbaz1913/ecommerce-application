@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.*;
 @RestControllerAdvice
 public class ExceptionControllerAdvice {
 
-    @ExceptionHandler(value = NotFoundException.class)
-    @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public ResponseEntity<String> handleCustomerException(NotFoundException notFoundException) {
-        return new ResponseEntity<>(notFoundException.getMessage(), HttpStatus.NOT_FOUND);
-    }
+        @ExceptionHandler(value = NoSuchElementFoundException.class)
+        @ResponseStatus(value = HttpStatus.NOT_FOUND)
+        public ResponseEntity<String> handleCustomerException(NoSuchElementFoundException noSuchElementFoundException) {
+            return new ResponseEntity<>(noSuchElementFoundException.getMessage(), HttpStatus.NOT_FOUND);
+        }
 
     @ExceptionHandler(value = AlreadyExists.class)
     public ResponseEntity<String> alreadyPresent(AlreadyExists alreadyexists) {

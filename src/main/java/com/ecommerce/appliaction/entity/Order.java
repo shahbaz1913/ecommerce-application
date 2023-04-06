@@ -22,18 +22,13 @@ public class Order {
     private Long id;
     private String customerName;
     private String productName;
-    private String orderAddress;
+    private String deliveryAddress;
     private int quantity;
     private double price;
     private double totalCost;
-    private Date date;
-
-
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
-
-
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "order_product",

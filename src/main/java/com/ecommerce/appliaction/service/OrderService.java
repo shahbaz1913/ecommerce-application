@@ -4,14 +4,14 @@ import com.ecommerce.appliaction.dto.OrderDTO;
 import com.ecommerce.appliaction.entity.Order;
 import com.ecommerce.appliaction.exception.EmptyDataException;
 import com.ecommerce.appliaction.exception.NegativeValueException;
-import com.ecommerce.appliaction.exception.NotFoundException;
+import com.ecommerce.appliaction.exception.NoSuchElementFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public interface OrderService {
-    void create(OrderDTO orderDTO)throws NotFoundException, NegativeValueException;
+    void create(OrderDTO orderDTO)throws NoSuchElementFoundException, NegativeValueException;
 
     Order update(OrderDTO orderDTO, Long id) throws NegativeValueException;
 

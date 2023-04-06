@@ -6,7 +6,7 @@ import com.ecommerce.appliaction.dto.CategoryDTO;
 import com.ecommerce.appliaction.entity.Category;
 import com.ecommerce.appliaction.exception.AlreadyExists;
 import com.ecommerce.appliaction.exception.EmptyDataException;
-import com.ecommerce.appliaction.exception.NotFoundException;
+import com.ecommerce.appliaction.exception.NoSuchElementFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -19,10 +19,10 @@ public class CategoryImpl implements CategoryService {
     CategoryRepository categoryRepository;
 
     @Override
-    public void update(CategoryDTO categoryDTO, Long id) throws NotFoundException {
+    public void update(CategoryDTO categoryDTO, Long id) throws NoSuchElementFoundException {
 
         Category category =  categoryRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Category not found for id = " + id));
+                .orElseThrow(() -> new NoSuchElementFoundException("Category not found for id = " + id));
 
         category.setCategoryName(categoryDTO.getCategoryName());
         category.setDescription(categoryDTO.getDescription());
@@ -46,16 +46,16 @@ public class CategoryImpl implements CategoryService {
     }
 
     @Override
-    public void delete(Long id) throws NotFoundException {
+    public void delete(Long id) throws NoSuchElementFoundException {
         categoryRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Category not found with id = " + id));
+                .orElseThrow(() -> new NoSuchElementFoundException("Category not found with id = " + id));
         categoryRepository.deleteById(id);
     }
 
     @Override
-    public Category getById(Long id) throws NotFoundException {
+    public Category getById(Long id) throws NoSuchElementFoundException {
         return categoryRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Category not found with id = " + id));
+                .orElseThrow(() -> new NoSuchElementFoundException("Category not found with id = " + id));
     }
 
     @Override

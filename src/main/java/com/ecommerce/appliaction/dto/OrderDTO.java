@@ -8,6 +8,6 @@ import lombok.Setter;
 public class OrderDTO {
     private long customerId;
     private long productId;
-    private String orderAddress;
+    private String deliveryAddress;
     private int quantity;
 }

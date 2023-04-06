@@ -4,7 +4,8 @@ import com.ecommerce.appliaction.dto.CustomerDTO;
 import com.ecommerce.appliaction.entity.Customer;
 import com.ecommerce.appliaction.exception.AlreadyExists;
 import com.ecommerce.appliaction.exception.EmptyDataException;
-import com.ecommerce.appliaction.exception.NotFoundException;
+import com.ecommerce.appliaction.exception.NoSuchElementFoundException;
+import com.ecommerce.appliaction.repositotry.CustomerRepository;
 import com.ecommerce.appliaction.service.CustomerService;
 import com.ecommerce.appliaction.serviceimpl.CustomerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,40 +24,37 @@ public class CustomerController {
     private CustomerService customerService;
 
 
-    @PostMapping("/addNewCustomer")
+    @PostMapping("/customer")
     public ResponseEntity<String> createCustomer(@RequestBody @Valid CustomerDTO customerDto) throws AlreadyExists {
         customerService.create(customerDto);
         return new ResponseEntity<>("Customer created successfully", HttpStatus.CREATED);
     }
 
 
-    @PutMapping("/updateCustomerBy/{id}")
-    public ResponseEntity<String> updateCustomer(@RequestBody @Valid CustomerDTO customerDTO, @PathVariable long id) throws NotFoundException {
+    @PutMapping("/customer/{id}")
+    public ResponseEntity<String> updateCustomer(@RequestBody  CustomerDTO customerDTO, @PathVariable long id) throws NoSuchElementFoundException {
         customerService.update(customerDTO, id);
         return new ResponseEntity<>("Customer updated successfully", HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/deleteCustomerBy/{id}")
-    public ResponseEntity<String> deleteCustomer(@PathVariable long id) throws NotFoundException {
+
+    @DeleteMapping("/customer/{id}")
+    public ResponseEntity<String> deleteCustomer(@PathVariable long id) throws NoSuchElementFoundException {
         this.customerService.delete(id);
         return new ResponseEntity<>("Customer deleted successfully", HttpStatus.OK);
     }
 
-    @GetMapping("/fetchCustomerBy/{id}")
-    public ResponseEntity<Customer> getCustomer(@PathVariable Long id) throws NotFoundException {
+    @GetMapping("/customer/{id}")
+    public ResponseEntity<Customer> getCustomer(@PathVariable Long id) throws NoSuchElementFoundException {
         Customer customer = customerService.getById(id);
         return new ResponseEntity<>(customer, HttpStatus.OK);
     }
 
-    @GetMapping("/fetchAllCustomers")
+    @GetMapping("/allCustomer")
     public ResponseEntity<List<Customer>> getAllCustomer() throws EmptyDataException {
         List<Customer> customerList = customerService.getAll();
         return new ResponseEntity<>(customerList, HttpStatus.OK);
     }
-    @Autowired
-    CustomerImpl customer;
-
-
 
 
 

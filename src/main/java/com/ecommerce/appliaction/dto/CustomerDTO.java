@@ -11,15 +11,9 @@ import javax.validation.constraints.Size;
 
 @Setter
 @Getter
-@Builder
 public class CustomerDTO {
-
     private String customerName;
-
-
-    private String password;
-
-
+    private String address;
     private String email;
 
 }

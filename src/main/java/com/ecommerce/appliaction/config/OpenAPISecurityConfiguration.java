@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
 @OpenAPIDefinition(
         info = @Info(
                 title = "ecommerce API",
-                version = "${api.version}",
                 contact = @Contact(
                         name = "Diatoz", email = "user-apis@diaatoz.com", url = "http://www.diatoz.com"),
                 license = @License(
