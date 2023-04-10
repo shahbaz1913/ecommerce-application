@@ -12,8 +12,6 @@ import com.ecommerce.appliaction.repositotry.OrderRepository;
 import com.ecommerce.appliaction.repositotry.ProductRepository;
 import com.ecommerce.appliaction.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -60,8 +58,7 @@ public class OrderServiceImpl implements OrderService {
         } else {
             newOrder.setDeliveryAddress(orderDTO.getDeliveryAddress());
         }
-        product.setProductStock(product.getProductStock()-newOrder.getQuantity());
-
+        product.setProductStock(product.getProductStock() - newOrder.getQuantity());
 
         orderRepository.save(newOrder);
     }
@@ -81,11 +78,12 @@ public class OrderServiceImpl implements OrderService {
 
         Product product = productRepository.findById(orderDTO.getProductId())
                 .orElseThrow(() -> new NoSuchElementFoundException("Product not found for ID: " + orderDTO.getProductId()));
-        product.setProductStock(product.getProductStock()-orderDTO.getQuantity());
+        product.setProductStock(product.getProductStock() - orderDTO.getQuantity());
         order.setPrice(product.getProductPrice());
         double totalCost = (product.getProductPrice() * orderDTO.getQuantity()) - product.getProductDiscount();
         order.setTotalCost(totalCost);
-        order.setQuantity(orderDTO.getQuantity());List<Product> newProduct = new ArrayList<>();
+        order.setQuantity(orderDTO.getQuantity());
+        List<Product> newProduct = new ArrayList<>();
         newProduct.add(product);
         order.setProducts(newProduct);
 
@@ -110,6 +108,12 @@ public class OrderServiceImpl implements OrderService {
     public Order getById(Long id) throws NoSuchElementFoundException {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementFoundException("Order not found for order ID: " + id));
+    }
+
+    @Override
+    public List<Order> findByCustomerId(long id) {
+       List<Order> orders= orderRepository.findAllOrderByCustomerId(id);
+        return orders;
     }
 
 

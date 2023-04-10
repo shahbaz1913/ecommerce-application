@@ -30,15 +30,20 @@ public class UserController {
     UserRepository userRepository;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody UserDTO user) throws Exception {
+    public ResponseEntity<String> createAuthenticationToken(@RequestBody UserDTO user) throws Exception {
         try {
+            log.info("UserController :: createAuthenticationToken method called");
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
             UserDetails userDetails = userDetailsService
                     .loadUserByUsername(user.getUsername());
             String token = JwtUtil.generateToken(userDetails);
+            log.info("Credentials are correct,login successfully ");
             return new ResponseEntity<>(token, HttpStatus.OK);
         } catch (BadCredentialsException e) {
+            log.error(e.getMessage());
+            log.error("BadCredentialsException exception");
             throw e;
+
         }
     }
 

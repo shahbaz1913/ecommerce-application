@@ -11,6 +11,7 @@ import com.ecommerce.appliaction.repositotry.CartRepository;
 import com.ecommerce.appliaction.repositotry.CustomerRepository;
 import com.ecommerce.appliaction.repositotry.ProductRepository;
 import com.ecommerce.appliaction.service.CartService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public   class CartServiceImpl implements CartService {
+@Slf4j
+public class CartServiceImpl implements CartService {
     @Autowired
     CartRepository cartRepository;
     @Autowired
@@ -30,6 +32,7 @@ public   class CartServiceImpl implements CartService {
 
     @Override
     public void addItem(CartDTO cartDTO) throws NoSuchElementFoundException {
+        log.info("CartServiceImpl :: addItem :: method called");
         Cart cart = new Cart();
 
         Optional<Customer> customer = customerRepository.findById(cartDTO.getCustomerId());
@@ -38,6 +41,7 @@ public   class CartServiceImpl implements CartService {
         }
         cart.setCustomer(customer.get());
         cart.setCustomerName(customer.get().getCustomerName());
+        log.warn("cartServiceImpl : addItem request parameters {}", customer.get().getCustomerName());
 
         Optional<Product> product = productRepository.findById(cartDTO.getProductId());
         if (product.isEmpty()) {
@@ -46,7 +50,7 @@ public   class CartServiceImpl implements CartService {
         cart.setProductName(product.get().getProductName());
         cart.setPrice(product.get().getProductPrice());
         cart.setQuantity(cartDTO.getQuantity());
-
+        log.info("cart saved in database ");
         cartRepository.save(cart);
 
     }
@@ -61,7 +65,7 @@ public   class CartServiceImpl implements CartService {
                 .orElseThrow(() -> new NoSuchElementFoundException("Customer not found for id: " + cartDTO.getCustomerId()));
 
         var cart = cartRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementFoundException("Cart item not found for id: " + id));
+                .orElseThrow(() -> new NoSuchElementFoundException("Cart item not found for id: " +  id));
 
         if (cartDTO.getQuantity() <= 0) {
             throw new NegativeValueException("Invalid quantity entered: " + cartDTO.getQuantity());
@@ -88,6 +92,21 @@ public   class CartServiceImpl implements CartService {
     public Cart getCartByID(Long id) throws NoSuchElementFoundException {
         return cartRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementFoundException("cart not found  id : " + id));
+
+
+        /* Cart cart = new Cart();
+        try {
+            log.info("CartServiceImpl : getById execution started");
+            cart = cartRepository.findById(id)
+                    .orElseThrow(() -> new NoSuchElementFoundException("Cart not found with id " + id, id));
+            log.debug("retrieving  data from database for id {}", id);
+
+        } catch (Exception e) {
+            log.error("exception occurred while retrieving");
+            throw new NoSuchElementFoundException("exception occurred while retrieving {} from database,Exception message {}",id);
+        }
+        log.info("execution ended");
+        return cart;*/
 
     }
 

@@ -7,6 +7,7 @@ import com.ecommerce.appliaction.exception.EmptyDataException;
 import com.ecommerce.appliaction.exception.NoSuchElementFoundException;
 import com.ecommerce.appliaction.repositotry.CustomerRepository;
 import com.ecommerce.appliaction.service.CustomerService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@Slf4j
 public class CustomerImpl implements CustomerService {
 
     @Autowired
@@ -21,16 +23,19 @@ public class CustomerImpl implements CustomerService {
 
     @Override
     public void create(CustomerDTO customerDTO) throws AlreadyExists {
+        log.info("customer serviceImpl  :: create ");
         Customer customer = new Customer();
         Customer customer1 = customerRepository.findByEmail(customerDTO.getEmail());
         if (customer1 == null) {
             customer.setCustomerName(customerDTO.getCustomerName());
             customer.setEmail(customerDTO.getEmail());
             customer.setAddress(customerDTO.getAddress());
+            log.info("customer saved in database successfully ");
             customerRepository.save(customer);
 
 
         } else {
+
             throw new AlreadyExists("Email already exists please change the Email : " + customerDTO.getEmail());
         }
 

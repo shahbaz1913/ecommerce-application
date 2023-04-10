@@ -15,7 +15,6 @@ import java.util.List;
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
     List<Order> findAllOrderByCustomerId(long customer_id);
-    List<Order> findFirst10ByCustomerNameOrderByIdDesc(String customerName);
 
 
 }

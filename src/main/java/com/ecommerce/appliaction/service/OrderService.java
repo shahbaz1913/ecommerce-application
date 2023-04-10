@@ -18,6 +18,7 @@ public interface OrderService {
     void delete(Long id);
 
     Order getById(Long id);
+    List<Order> findByCustomerId(long id);
 
     List<Order> getAll() throws EmptyDataException;
 }

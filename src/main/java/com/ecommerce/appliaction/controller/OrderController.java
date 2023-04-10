@@ -1,7 +1,6 @@
 package com.ecommerce.appliaction.controller;
 
 import com.ecommerce.appliaction.dto.OrderDTO;
-import com.ecommerce.appliaction.entity.Customer;
 import com.ecommerce.appliaction.entity.Order;
 import com.ecommerce.appliaction.exception.EmptyDataException;
 import com.ecommerce.appliaction.exception.NegativeValueException;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/order-api")
@@ -38,16 +36,11 @@ public class OrderController {
 
     @GetMapping("/customersOrders/{id}")
     public List<Order> getAllOrderByCustomerId(@PathVariable long id) {
-        Optional<Customer> customer = customerRepository.findById(id);
-        List<Order> order = orderRepository.findAllOrderByCustomerId(customer.get().getId());
-        return order;
+        List<Order> orders = orderService.findByCustomerId(id);
+        return orders;
     }
 
-    @GetMapping("/customersOrders/{name}")
-    public List<Order> getAllOrderByCustomerId(@PathVariable String name) {
-        List<Order> order = orderRepository.findFirst10ByCustomerNameOrderByIdDesc(name);
-        return order;
-    }
+
 
     @PutMapping("/order/{id}")
     public ResponseEntity<String> updateOrder(@RequestBody OrderDTO orderDTO, @PathVariable long id) throws NoSuchElementFoundException, NegativeValueException {

@@ -33,7 +33,7 @@ public class Product {
     @JoinColumn(name = "category_id")
     @JsonIgnore
     private Category category;
-    @ManyToMany(mappedBy = "products" )
+    @ManyToMany(mappedBy = "products")
     @JsonIgnore
     private List<Order> orderList = new ArrayList<>();
 

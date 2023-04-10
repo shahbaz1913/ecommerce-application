@@ -22,7 +22,7 @@ public class CategoryImpl implements CategoryService {
     public void update(CategoryDTO categoryDTO, Long id) throws NoSuchElementFoundException {
 
         Category category =  categoryRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementFoundException("Category not found for id = " + id));
+                .orElseThrow(() -> new NoSuchElementFoundException("Category not found for id = " +  id));
 
         category.setCategoryName(categoryDTO.getCategoryName());
         category.setDescription(categoryDTO.getDescription());
@@ -55,7 +55,7 @@ public class CategoryImpl implements CategoryService {
     @Override
     public Category getById(Long id) throws NoSuchElementFoundException {
         return categoryRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementFoundException("Category not found with id = " + id));
+                .orElseThrow(() -> new NoSuchElementFoundException("Category not found with id = " +  id));
     }
 
     @Override
