@@ -11,13 +11,17 @@ import com.ecommerce.appliaction.repositotry.CategoryRepository;
 import com.ecommerce.appliaction.repositotry.ProductRepository;
 import com.ecommerce.appliaction.service.ProductService;
 import io.micrometer.common.util.StringUtils;
+import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@Log4j2
 public class ProductImpl implements ProductService {
     @Autowired
     private ProductRepository productRepository;
@@ -28,22 +32,31 @@ public class ProductImpl implements ProductService {
     @Override
     public void create(ProductDTO productDTO) throws AlreadyExists, NegativeValueException {
         //validate ProductDTO
+        log.info("productService : create method         ");
+
         validateProductDTO(productDTO);
 
-        var productName = productRepository.findByProductName(productDTO.getProductName());
-        if (productName != null) {
-            throw new AlreadyExists("Product is already present in the table please change the product name: " + productDTO.getProductName());
-        }
 
-        Product product = new Product();
-        product.setProductName(productDTO.getProductName());
-        product.setProductPrice(productDTO.getProductPrice());
-        product.setProductDiscount(productDTO.getProductDiscount());
-        product.setProductStock(productDTO.getProductStock());
-        Category category = categoryRepository.findById(productDTO.getCategoryId())
-                .orElseThrow(() -> new NoSuchElementFoundException("Category not found please change the categoryId: " + productDTO.getCategoryId()));
-        product.setCategory(category);
-        productRepository.save(product);
+        var productName = productRepository.findByProductName(productDTO.getProductName());
+        Optional<Product> product1= Optional.ofNullable(productRepository
+                .findByProductName(productDTO.getProductName()));
+        if (product1.isPresent()) {
+            log.error("product is already exists");
+            throw new AlreadyExists("Product is already present in the table please change the product name: " + productDTO.getProductName());
+        }else {
+            log.info("creating new product productName"+productDTO.getProductName());
+
+            Product product = new Product();
+            product.setProductName(productDTO.getProductName());
+            product.setProductPrice(productDTO.getProductPrice());
+            product.setProductDiscount(productDTO.getProductDiscount());
+            product.setProductStock(productDTO.getProductStock());
+            Category category = categoryRepository.findById(productDTO.getCategoryId())
+                    .orElseThrow(() -> new NoSuchElementFoundException("Category not found please change the categoryId: " + productDTO.getCategoryId()));
+            product.setCategory(category);
+            log.info("Created successfully");
+            productRepository.save(product);
+        }
     }
 
     @Override

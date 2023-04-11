@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -25,8 +26,10 @@ public class CustomerImpl implements CustomerService {
     public void create(CustomerDTO customerDTO) throws AlreadyExists {
         log.info("customer serviceImpl  :: create ");
         Customer customer = new Customer();
-        Customer customer1 = customerRepository.findByEmail(customerDTO.getEmail());
-        if (customer1 == null) {
+         Optional<Customer> customer2 = Optional.ofNullable(customerRepository.findByEmail(customerDTO.getEmail()));
+        if (customer2.isPresent()) {
+            throw new AlreadyExists("Email already exists please change the Email : " + customerDTO.getEmail());
+        } else {
             customer.setCustomerName(customerDTO.getCustomerName());
             customer.setEmail(customerDTO.getEmail());
             customer.setAddress(customerDTO.getAddress());
@@ -34,9 +37,6 @@ public class CustomerImpl implements CustomerService {
             customerRepository.save(customer);
 
 
-        } else {
-
-            throw new AlreadyExists("Email already exists please change the Email : " + customerDTO.getEmail());
         }
 
     }
@@ -44,8 +44,7 @@ public class CustomerImpl implements CustomerService {
     @Override
     public CustomerDTO update(CustomerDTO customerDto, Long id) throws NoSuchElementFoundException {
 
-        Customer customer = customerRepository.findById(id).orElseThrow(
-                () -> new NoSuchElementFoundException("Customer not found  id : " + id));
+        Customer customer = customerRepository.findById(id).orElseThrow(() -> new NoSuchElementFoundException("Customer not found  id : " + id));
         customer.setCustomerName(customerDto.getCustomerName());
         customer.setAddress(customerDto.getAddress());
         customer.setEmail(customerDto.getEmail());
@@ -63,8 +62,7 @@ public class CustomerImpl implements CustomerService {
 
     @Override
     public void delete(Long id) throws NoSuchElementFoundException {
-        var customer1 = customerRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementFoundException("customer not found id : " + id));
+        var customer1 = customerRepository.findById(id).orElseThrow(() -> new NoSuchElementFoundException("customer not found id : " + id));
         customerRepository.deleteById(customer1.getId());
 
     }
@@ -72,8 +70,7 @@ public class CustomerImpl implements CustomerService {
 
     @Override
     public Customer getById(Long id) throws NoSuchElementFoundException {
-        return customerRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementFoundException("Customer  not found for id = " + id));
+        return customerRepository.findById(id).orElseThrow(() -> new NoSuchElementFoundException("Customer  not found for id = " + id));
     }
 
     @Override

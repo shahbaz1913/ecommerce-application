@@ -116,6 +116,12 @@ public class OrderServiceImpl implements OrderService {
         return orders;
     }
 
+    @Override
+    public List<Order> findByDeliveryAddress(String address) {
+        List<Order> orders=findByDeliveryAddress(address);
+        return orders;
+    }
+
 
     @Override
     public List<Order> getAll() throws EmptyDataException {

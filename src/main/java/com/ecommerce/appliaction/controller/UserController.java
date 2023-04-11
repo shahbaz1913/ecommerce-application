@@ -15,6 +15,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @Slf4j
 @RestController
 public class UserController {
@@ -30,7 +32,7 @@ public class UserController {
     UserRepository userRepository;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseEntity<String> createAuthenticationToken(@RequestBody UserDTO user) throws Exception {
+    public ResponseEntity<String> createAuthenticationToken(@RequestBody @Valid UserDTO user) throws Exception {
         try {
             log.info("UserController :: createAuthenticationToken method called");
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));

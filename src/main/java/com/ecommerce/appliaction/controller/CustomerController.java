@@ -32,7 +32,7 @@ public class CustomerController {
 
 
     @PutMapping("/customer/{id}")
-    public ResponseEntity<String> updateCustomer(@RequestBody  CustomerDTO customerDTO, @PathVariable long id) throws NoSuchElementFoundException {
+    public ResponseEntity<String> updateCustomer(@RequestBody @Valid CustomerDTO customerDTO, @PathVariable long id) throws NoSuchElementFoundException {
         customerService.update(customerDTO, id);
         return new ResponseEntity<>("Customer updated successfully", HttpStatus.CREATED);
     }

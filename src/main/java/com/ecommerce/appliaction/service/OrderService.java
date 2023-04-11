@@ -19,6 +19,7 @@ public interface OrderService {
 
     Order getById(Long id);
     List<Order> findByCustomerId(long id);
+    List<Order> findByDeliveryAddress(String  address);
 
     List<Order> getAll() throws EmptyDataException;
 }

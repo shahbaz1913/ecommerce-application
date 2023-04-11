@@ -30,7 +30,7 @@ public class ProductController {
     }
 
     @PutMapping("/product/{id}")
-    public ResponseEntity<String> updateProduct(@RequestBody ProductDTO productDTO, @PathVariable long id) throws NoSuchElementFoundException, NegativeValueException {
+    public ResponseEntity<String> updateProduct(@RequestBody @Valid ProductDTO productDTO, @PathVariable long id) throws NoSuchElementFoundException, NegativeValueException {
         productService.update(productDTO, id);
         return new ResponseEntity<>("Product updated successfully", HttpStatus.CREATED);
     }

@@ -1,12 +1,14 @@
 package com.ecommerce.appliaction.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Setter
-@Getter
+import javax.validation.constraints.NotNull;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class CategoryDTO {
-
+    @NotNull(message = "categoryName shouldn't be null")
     private String categoryName;
     private String description;
 }

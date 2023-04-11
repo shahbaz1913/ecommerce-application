@@ -41,9 +41,8 @@ public class OrderController {
     }
 
 
-
     @PutMapping("/order/{id}")
-    public ResponseEntity<String> updateOrder(@RequestBody OrderDTO orderDTO, @PathVariable long id) throws NoSuchElementFoundException, NegativeValueException {
+    public ResponseEntity<String> updateOrder(@RequestBody @Valid OrderDTO orderDTO, @PathVariable long id) throws NoSuchElementFoundException, NegativeValueException {
         this.orderService.update(orderDTO, id);
         return new ResponseEntity<>(" order update successfully", HttpStatus.CREATED);
     }
@@ -64,6 +63,11 @@ public class OrderController {
     public ResponseEntity<List<Order>> getAllOrder() throws EmptyDataException {
         List<Order> all = orderService.getAll();
         return new ResponseEntity<>(all, HttpStatus.OK);
+    }
+    @GetMapping("/address")
+    public ResponseEntity<List<Order>>  getAllOrderByAddress(@PathVariable  String address){
+        List<Order> orders=orderService.findByDeliveryAddress(address);
+        return ResponseEntity.ok(orders);
     }
 
 }
