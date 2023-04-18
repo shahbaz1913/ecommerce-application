@@ -41,7 +41,7 @@ public class CartServiceImpl implements CartService {
         }
         cart.setCustomer(customer.get());
         cart.setCustomerName(customer.get().getCustomerName());
-        log.warn("cartServiceImpl : addItem request parameters {}", customer.get().getCustomerName());
+        log.info("cartServiceImpl : addItem request parameters {}", customer.get().getCustomerName());
 
         Optional<Product> product = productRepository.findById(cartDTO.getProductId());
         if (product.isEmpty()) {
@@ -65,7 +65,7 @@ public class CartServiceImpl implements CartService {
                 .orElseThrow(() -> new NoSuchElementFoundException("Customer not found for id: " + cartDTO.getCustomerId()));
 
         var cart = cartRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementFoundException("Cart item not found for id: " +  id));
+                .orElseThrow(() -> new NoSuchElementFoundException("Cart item not found for id: " + id));
 
         if (cartDTO.getQuantity() <= 0) {
             throw new NegativeValueException("Invalid quantity entered: " + cartDTO.getQuantity());
